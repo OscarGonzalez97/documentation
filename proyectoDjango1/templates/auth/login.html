@@ -1,0 +1,39 @@
+{% extends "common/base.html" %}
+{% load static %}
+{% block additional_head %}
+    <link href="{% static 'css/login.css' %}" rel="stylesheet">
+{% endblock %}
+{% block body_block %}
+    <main class="form-signin">
+        <form method="POST">
+            {% csrf_token %}
+            <h1 class="h3 mb-3 fw-normal">Credenciales</h1>
+            <div class="form-floating">
+                <input class="form-control" id="floatingInput" placeholder="name@example.com" name="username" value="{{ username|default_if_none:"" }}">
+                <label for="floatingInput">Email</label>
+            </div>
+            <div class="form-floating">
+                <input type="password" class="form-control" id="floatingPassword" placeholder="Password" name="password">
+                <label for="floatingPassword">Password</label>
+            </div>
+            <div class="checkbox mb-3">
+                <label>
+                    <input type="checkbox" value="1" name="remember_me" {{ remember_me|yesno:'checked,' }}> Remember me
+                </label>
+            </div>
+            {% if err %}
+                <div class="alert alert-danger" role="alert">
+                Error: {{ err }}
+                </div>
+            {% endif %}
+            <button class="w-100 btn btn-lg btn-primary" type="submit">Ingresar</button>
+            <p class="mt-5 mb-3 text-muted">&copy; Roshka - 2022</p>
+        </form>
+    </main>
+{% endblock %}
+
+{% block local_js %}
+<script>
+    document.body.style.display = "block";
+</script>
+{% endblock %}

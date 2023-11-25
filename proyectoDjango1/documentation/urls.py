@@ -1,9 +1,10 @@
 from django.urls import path, reverse_lazy
-from django.views.generic import RedirectView
+from .views import your_view_function
 
 from . import views
 
 urlpatterns = [
+    path('', your_view_function, name='your_view_function'),
     path('versions/', views.versions, name="versions"),
     path('get_doc/', views.get_doc, name="get_doc"),
     path('files/', views.files, name="files"),

@@ -1,0 +1,43 @@
+{% extends "common/base-secured.html" %}
+{% load django_bootstrap5 %}
+{% block main %}
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+    <h1 class="h2">Videos</h1>
+</div>
+<div class="container my-3">
+    <!-- Card -->
+  <div id="card" class="card w-100 mx-auto border border-2 rounded-4 shadow">
+    <!-- Videos -->
+    {% if types %}
+    <div class="card-body">
+      <ul class="list-group">
+          {% for type in types %}
+            <li class="list-group-item">
+              <h4>{{type.video_type_name}}</h4>
+              <ul>
+              {% if videos %}
+                {% for video in videos %}
+                  {% if video.type.id == type.id %}
+                  <li>
+                    <h5 class="mt-3">{{ video.title }}</h5>
+                    <p>{{ video.description }}</p>
+                    {% if video.video_code %}
+                      <div class="ratio ratio-16x9">
+                        <iframe class="embed-responsive-item" src="https://www.youtube.com/embed/{{video.video_code}}" frameborder="0" allowfullscreen></iframe>
+                      </div>
+                    {% else %}
+                        <a href="{{video.link}}">Link video</a>
+                    {% endif %}
+                  </li>
+                  {% endif %}
+                {% endfor %}
+              {% endif %}
+              </ul>
+            </li>
+          {% endfor %}
+      </ul>
+    </div>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

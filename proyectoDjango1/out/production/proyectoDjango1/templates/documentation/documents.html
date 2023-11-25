@@ -1,0 +1,72 @@
+{% extends "common/base-secured.html" %}
+{% load django_bootstrap5 %}
+{% block main %}
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+    <h1 class="h2">Documentos</h1>
+</div>
+<div class="container my-3">
+    <!-- Card -->
+  <div id="card" class="card w-100 mx-auto border border-2 rounded-4 shadow">
+    <!-- Documents -->
+    {% if types %}
+    <div class="card-body">
+      <ul class="list-group">
+          {% for type in types %}
+            <li class="list-group-item">
+              <h3>{{type.document_type_name}}</h3>
+              <ul>
+              {% if file_names %}
+                {% for file_name in file_names %}
+                  {% if file_name.type.id == type.id %}
+                  <li>
+                    <h4>{{file_name.file_name}} </h4>
+                    <ul>
+                    {% if documents %}
+                      {% for document in documents %}
+                        {% if document.file_name.id == file_name.id %}
+                        <li>
+                          <a target="_blank" href="{{ document.file.url }}"><h5>Ultima version {{document.version_number}}</h5></a>
+                        </li>
+                        {% endif %}
+                      {% endfor %}
+                      {% for document in outdated_docs|slice:":1" %}
+                          {% if document.file_name.id == file_name.id %}
+                          <li id="btn_{{file_name.id}}">
+                            <button type="button" onclick="mostrarVersiones('{{file_name.id}}', 'btn_{{file_name.id}}')" class="btn btn-link">Ver más versiones..</button>
+                          </li>
+                          {% endif %}
+                        {% endfor %}
+                      <div id="{{file_name.id}}" class="d-none">
+                        {% for document in outdated_docs %}
+                          {% if document.file_name.id == file_name.id %}
+                          <li>
+                            <a target="_blank" href="{{ document.file.url }}"><h5>{{document.version_number}}</h5></a>
+                          </li>
+                          {% endif %}
+                        {% endfor %}
+                      </div>
+                    {% endif %}
+                    </ul>
+                  </li>
+                  {% endif %}
+                {% endfor %}
+              {% endif %}
+              </ul>
+            </li>
+          {% endfor %}
+      </ul>
+    </div>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}
+{% block local_js %}
+<script>
+  function mostrarVersiones(id, btn_id) {
+    let div = document.getElementById(id);
+    div.classList.remove("d-none");
+    let btn = document.getElementById(btn_id);
+    btn.classList.add("d-none");
+  }
+</script>
+{% endblock %}

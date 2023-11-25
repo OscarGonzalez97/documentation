@@ -3,20 +3,24 @@ from django.contrib.auth.decorators import login_required
 from django.db.models import Max, Q
 from django.template.loader import render_to_string
 from .models import Version, VersionConfiguration, ConfigurationFileName, DatabaseFileName, Document, DocumentType, \
-    DocumentFileName, PostmanFunctionality, Postman, VideoType, Video, DatabaseScript, StoredProcedureHTTP
+    DocumentFileName, PostmanFunctionality, Postman, VideoType, Video, DatabaseScript, StoredProcedureHTTP, MenuFilters
 from django.http import HttpResponse
 import re
+import logging
 
+logger = logging.getLogger(__name__)
 
 @login_required(login_url='/auth/login')
 def versions(request):
+    menu_filters_instance = MenuFilters.objects.first()  # Assuming you have only one instance
     versions = Version.objects.all().order_by('-date')
     details = {}
     for version in versions:
         details[version.id] = version.details.all()
     context = {
         'versions': versions,
-        'details': details
+        'details': details,
+        'menu_filters_instance': menu_filters_instance,
     }
     return render(request, 'documentation/versions.html', context)
 
@@ -26,6 +30,7 @@ def get_doc(request):
     version = Version.objects.filter(id=int(version_id)).first()
     configurations = version.configurations.all().order_by('version__date')
     configuration_context = []
+    menu_filters_instance = MenuFilters.objects.first()  # Assuming you have only one instance
 
     for conf in configurations:
         conf_modified = {
@@ -43,7 +48,8 @@ def get_doc(request):
         'files': version.files.all(),
         'configurations': configuration_context,
         'images': version.images.all(),
-        'database_files': database_files
+        'database_files': database_files,
+        'menu_filters_instance': menu_filters_instance,
     }
     data = render_to_string('documentation/get_doc.html', context)
     return HttpResponse(data, status=200, content_type='text/html')
@@ -53,6 +59,7 @@ def get_doc(request):
 def files(request):
     configurations_files = ConfigurationFileName.objects.all().order_by('configuration_file')
     configuration_context = []
+    menu_filters_instance = MenuFilters.objects.first()  # Assuming you have only one instance
 
     for file in configurations_files:
         conf_modified = {
@@ -72,6 +79,7 @@ def files(request):
 
     context = {
         'configurations': configuration_context,
+        'menu_filters_instance': menu_filters_instance,
     }
     return render(request, 'documentation/files.html', context)
 
@@ -80,6 +88,7 @@ def files(request):
 def scripts_db(request):
     files = DatabaseFileName.objects.all().order_by('database_file_name')
     scripts_files_context = []
+    menu_filters_instance = MenuFilters.objects.first()  # Assuming you have only one instance
 
     for file in files:
         conf_modified = {
@@ -103,6 +112,7 @@ def scripts_db(request):
 
     context = {
         'configurations': scripts_files_context,
+        'menu_filters_instance': menu_filters_instance,
     }
     return render(request, 'documentation/database.html', context)
 
@@ -115,6 +125,7 @@ def documents(request):
     ).order_by('last_document_date')
     documentos = []
     documentos_id = []
+    menu_filters_instance = MenuFilters.objects.first()  # Assuming you have only one instance
     for file_name in file_names:
         last_document = file_name.documents.order_by('-date').first()
         if last_document:
@@ -127,7 +138,8 @@ def documents(request):
         'types': types,
         'file_names': file_names,
         'documents': documentos,
-        'outdated_docs': outdate_docs
+        'outdated_docs': outdate_docs,
+        'menu_filters_instance': menu_filters_instance,
     }
     return render(request, 'documentation/documents.html', context)
 
@@ -136,10 +148,11 @@ def documents(request):
 def postman(request):
     functionalities = PostmanFunctionality.objects.all().order_by('postman_functionality_name')
     files = Postman.objects.filter(visible=True)
-
+    menu_filters_instance = MenuFilters.objects.first()  # Assuming you have only one instance
     context = {
         'functionalities': functionalities,
         'files': files,
+        'menu_filters_instance': menu_filters_instance,
     }
     return render(request, 'documentation/postman.html', context)
 
@@ -149,6 +162,7 @@ def videos(request):
     types = VideoType.objects.all().order_by('video_type_name')
     videos = Video.objects.all().order_by('-date')
     vids = []
+    menu_filters_instance = MenuFilters.objects.first()  # Assuming you have only one instance
     for video in videos:
         video_code = re.search(r"youtu\.be/(.*)", video.link).group(1)
         vids.append({
@@ -162,6 +176,7 @@ def videos(request):
     context = {
         'types': types,
         'videos': vids,
+        'menu_filters_instance': menu_filters_instance,
     }
     return render(request, 'documentation/videos.html', context)
 
@@ -172,9 +187,11 @@ def sp_http(request, type):
         versions = StoredProcedureHTTP.objects.filter(Q(type__type_name__icontains=type)).order_by('date')
     else:
         versions = StoredProcedureHTTP.objects.all().order_by('-date')
+    menu_filters_instance = MenuFilters.objects.first()  # Assuming you have only one instance
     context = {
         'versions': versions,
-        'type': type
+        'type': type,
+        'menu_filters_instance': menu_filters_instance,
     }
     return render(request, 'documentation/versions_sps.html', context)
 
@@ -182,9 +199,14 @@ def sp_http(request, type):
 def get_doc_sps(request):
     version_id = request.GET.get("version_id")
     version = StoredProcedureHTTP.objects.filter(id=int(version_id)).first()
-
+    menu_filters_instance = MenuFilters.objects.first()  # Assuming you have only one instance
     context = {
-        'version': version
+        'version': version,
+        'menu_filters_instance': menu_filters_instance,
     }
     data = render_to_string('documentation/get_doc_sps.html', context)
     return HttpResponse(data, status=200, content_type='text/html')
+@login_required(login_url='/auth/login')
+def your_view_function(request):
+    menu_filters_instance = MenuFilters.objects.first()  # Assuming you have only one instance
+    return render(request, 'common/base-secured.html', {'menu_filters_instance': menu_filters_instance})

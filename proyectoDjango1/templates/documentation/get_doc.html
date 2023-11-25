@@ -1,0 +1,151 @@
+  <div class="card-header py-3">
+    <h3 id="version-title">Version {{ version.version_number }} - Fecha: {{ version.date|date:"d/m/Y" }}	</h3>
+  </div>
+  <!-- Resumen-->
+  <div class="card-body">
+    <h5 id="category-resumen" class="card-title">Resumen</h5>
+    <div class="card-text">
+      <div id="resumen-content" class="">
+        <p>{{ version.summary|safe }}</p>
+      </div>
+    </div>
+  </div>
+  <!-- Detalles -->
+  {% if details %}
+  <div class="card-body">
+    <h5 class="card-title">Detalles</h5>
+    <div class="card-text">
+      <div id="detalles-content">
+        <ol class="list-group list-group-flush">
+          {% for detail in details %}
+            {% if detail.bold %}
+            <li class="list-group-item fw-bold">
+              {{ detail.detail_text|linebreaksbr }}
+            </li>
+            {% else %}
+            <li class="list-group-item">
+              {{ detail.detail_text|linebreaksbr }}
+            </li>
+            {% endif %}
+          {% endfor %}
+        </ol>
+      </div>
+    </div>
+  </div>
+  {% endif %}
+  <!-- Componentes -->
+  {% if components %}
+  <div class="card-body">
+    <h5 class="card-title">Version de componentes</h5>
+    <div class="card-text">
+      <div id="componentes-content">
+        <ol class="list-group list-group-flush">
+          {% for comp in components %}
+            <li class="list-group-item">
+              {{ comp.component|linebreaksbr }}
+            </li>
+          {% endfor %}
+        </ol>
+      </div>
+    </div>
+  </div>
+  {% endif %}
+  <!-- Archivos-->
+  {% if files %}
+  <div class="card-body">
+    <h5 id="category-title" class="card-title">Archivos</h5>
+    <div class="card-text">
+      <div id="archivos-content">
+        <ol class="list-group list-group-numbered list-group-flush">
+          {% for archivo in files %}
+            <li class="list-group-item">
+              <a target="_blank" href="{{ archivo.file.url }}">{{ archivo.file }}</a>
+            </li>
+          {% endfor %}
+        </ol>
+      </div>
+    </div>
+  </div>
+  {% endif %}
+  <!-- Configuracion -->
+  {% if configurations %}
+  <div class="card-body">
+    <h5 class="card-title">Configuraciones</h5>
+    <div class="card-text">
+      <div id="configuracion-content" >
+        <!-- <div id="configuracion-content"> -->
+        <div class="accordion mt-3" id="accordionExample">
+          {% for conf in configurations %}
+          <div class="accordion-item mb-3 border ">
+            <h2 class="accordion-header">
+              <button class="accordion-button collapsed bg-secondary-subtle" type="button"
+                data-bs-toggle="collapse" data-bs-target="#collapse{{ forloop.counter }}" aria-expanded="true"
+                aria-controls="collapse{{ forloop.counter }}">
+                {{conf.file_name}}
+              </button>
+            </h2>
+            <div id="collapse{{ forloop.counter }}" class="accordion-collapse collapse"
+              data-bs-parent="#accordionExample">
+              <div class="accordion-body p-3">
+                <!-- body -->
+                <p class='m-0' style="">{{ conf.old_configuration|linebreaksbr }}</p>
+                <p class='m-0' style="background-color:#e6ffec"># Desde version {{ version.version_number }}</p>
+                <p class='m-0' style="background-color:#e6ffec">{{ conf.configuration|linebreaksbr }}</p>
+              </div>
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+  </div>
+  {% endif %}
+  <!-- Database -->
+  {% if database_files %}
+  <div class="card-body">
+    <h5 class="card-title">Bases de datos</h5>
+    <div class="card-text">
+      <div id="db-content" >
+        <div class="accordion mt-3" id="accordionExampledb">
+          {% for database_file in database_files %}
+          <div class="accordion-item mb-3 border ">
+            <h2 class="accordion-header">
+              <button class="accordion-button collapsed bg-secondary-subtle" type="button"
+                data-bs-toggle="collapse" data-bs-target="#collapse{{ forloop.counter }}db" aria-expanded="true"
+                aria-controls="collapse{{ forloop.counter }}">
+                {{database_file.file_name.database_file_name}}
+              </button>
+            </h2>
+            <div id="collapse{{ forloop.counter }}db" class="accordion-collapse collapse"
+              data-bs-parent="#accordionExampledb">
+              <div class="accordion-body p-3">
+                <p class='m-0' style="background-color:#e6ffec"># Desde version {{ database_file.version.version_number }}</p>
+                <p class='m-0' style="background-color:#e6ffec">{{ database_file.change|linebreaksbr }}</p>
+              </div>
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+  </div>
+  {% endif %}
+  <!-- Imagenes -->
+  {% if images %}
+  <div class="card-body">
+    <h5 class="card-title">Capturas de pantalla</h5>
+    <div class="card-text">
+      <div id="imagenes-content">
+        {% for img in images %}
+        {% if img.image_title %}
+        <p class="text-decoration-underline fw-bold" >{{img.image_title}}</p>
+        {% endif %}
+        {% if img.image_description %}
+        <p class="text-muted" >{{img.image_description}}</p>
+        {% endif %}
+        <img class="img-fluid" src="{{ img.image.url }}" />
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+  {% endif %}

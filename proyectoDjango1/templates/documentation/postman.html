@@ -1,0 +1,35 @@
+{% extends "common/base-secured.html" %}
+{% load django_bootstrap5 %}
+{% block main %}
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+    <h1 class="h2">Postman</h1>
+</div>
+<div class="container my-3">
+    <!-- Card -->
+  <div id="card" class="card w-100 mx-auto border border-2 rounded-4 shadow">
+    <!-- Documents -->
+    {% if functionalities %}
+    <div class="card-body">
+      <ul class="list-group">
+          {% for functionality in functionalities %}
+            <li class="list-group-item">
+              <h4>{{functionality.postman_functionality_name}}</h4>
+              <ul>
+              {% if files %}
+                {% for file in files %}
+                  {% if file.functionality.id == functionality.id %}
+                  <li>
+                    <h5><a target="_blank" href="{{ file.postman_file.url }}">{{file.collection_name}}  {% if file.version_number %} Versión {{ file.version_number }}  {% endif %}</a></h5>
+                  </li>
+                  {% endif %}
+                {% endfor %}
+              {% endif %}
+              </ul>
+            </li>
+          {% endfor %}
+      </ul>
+    </div>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

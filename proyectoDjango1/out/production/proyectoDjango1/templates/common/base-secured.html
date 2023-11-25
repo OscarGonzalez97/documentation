@@ -1,0 +1,170 @@
+{% extends "common/base.html" %}
+{% load static %}
+{% load menuFilters %}
+{% block body_block %}
+<header class="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0 shadow">
+  <a class="navbar-brand col-md-3 col-lg-2 me-0 px-3" href="#">Django Documentation</a>
+  <button class="navbar-toggler position-absolute d-md-none collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#sidebarMenu" aria-controls="sidebarMenu" aria-expanded="false" aria-label="Toggle navigation">
+  <span class="navbar-toggler-icon"></span>
+  </button>
+  <div class="navbar-nav">
+    <div class="nav-item text-nowrap">
+      <a class="nav-link px-3" href="{% url 'logout' %}">Cerrar Sesión</a>
+    </div>
+  </div>
+  <style>
+    body {
+    min-height: 100vh;
+    min-height: -webkit-fill-available;
+    }
+    html {
+    height: -webkit-fill-available;
+    }
+    .b-example-divider {
+    flex-shrink: 0;
+    width: 1.5rem;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, .1);
+    border: solid rgba(0, 0, 0, .15);
+    border-width: 1px 0;
+    box-shadow: inset 0 .5em 1.5em rgba(0, 0, 0, .1), inset 0 .125em .5em rgba(0, 0, 0, .15);
+    }
+    .bi {
+    vertical-align: -.125em;
+    pointer-events: none;
+    fill: currentColor;
+    }
+    .dropdown-toggle { outline: 0; }
+    .nav-flush .nav-link {
+    border-radius: 0;
+    }
+    .btn-toggle {
+    display: inline-flex;
+    align-items: center;
+    padding: .25rem .5rem;
+    font-weight: 600;
+    color: rgba(0, 0, 0, .65);
+    background-color: transparent;
+    border: 0;
+    }
+    .btn-toggle:hover,
+    .btn-toggle:focus {
+    color: rgba(0, 0, 0, .85);
+    background-color: #fffff;
+    }
+    .btn-toggle::before {
+    width: 1.25em;
+    line-height: 0;
+    content: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='rgba%280,0,0,.5%29' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M5 14l6-6-6-6'/%3e%3c/svg%3e");
+    transition: transform .35s ease;
+    transform-origin: .5em 50%;
+    }
+    .btn-toggle[aria-expanded="true"] {
+    color: rgba(0, 0, 0, .85);
+    }
+    .btn-toggle[aria-expanded="true"]::before {
+    transform: rotate(90deg);
+    }
+    .btn-toggle-nav a {
+    display: inline-flex;
+    padding: .1875rem .5rem;
+    margin-top: .125rem;
+    margin-left: 1.25rem;
+    text-decoration: none;
+    }
+    .btn-toggle-nav a:hover,
+    .btn-toggle-nav a:focus {
+    background-color: #fffff;
+    }
+    .scrollarea {
+    overflow-y: auto;
+    }
+    .fw-semibold { font-weight: 600; }
+    .lh-tight { line-height: 1.25; }
+  </style>
+</header>
+<div class="container-fluid">
+  <div class="row">
+    <nav id="sidebarMenu" class="col-md-3 col-lg-2 d-md-block bg-light sidebar collapse">
+      <div class="position-sticky pt-3">
+        <ul class="list-unstyled ps-0">
+          <h5 class="d-flex justify-content-between align-items-center px-3 mt-4 mb-1 fw-bold">
+            <span>General</span>
+            <span data-feather="plus-circle"></span>
+          </h5>
+          <li class="border-top my-3"></li>
+          <li class="mb-1">
+            <button class="btn btn-toggle align-items-center rounded collapsed" data-bs-toggle="collapse" data-bs-target="#doc-collapse" aria-expanded="true">
+            Documentación
+            </button>
+            <div class="collapse show" id="doc-collapse">
+              <ul class="btn-toggle-nav list-unstyled fw-normal pb-1">
+                {% if menu_filters_instance.version_filter %}
+                  <li><a class="nav-link link-dark rounded {% if request.path == '/documentation/versions/' %}active{% endif %}" href="{% url 'versions' %}">Versiones</a></li>
+                {% endif %}
+                {% if menu_filters_instance.config_filter %}
+                  <li><a class="nav-link link-dark rounded {% if request.path == '/documentation/files/' %}active{% endif %}" href="{% url 'files' %}">Configuraciones</a></li>
+                {% endif %}
+                {% if menu_filters_instance.db_filter %}
+                  <li><a class="nav-link link-dark rounded {% if request.path == '/documentation/scripts/' %}active{% endif %}" href="{% url 'scripts' %}">Bases de datos</a></li>
+                {% endif %}
+                {% if menu_filters_instance.docs_filter %}
+                  <li><a class="nav-link link-dark rounded {% if request.path == '/documentation/documents/' %}active{% endif %}" href="{% url 'documents' %}">Documentos</a></li>
+                {% endif %}
+                {% if menu_filters_instance.videos_filter %}
+                  <li><a class="nav-link link-dark rounded {% if request.path == '/documentation/videos/' %}active{% endif %}" href="{% url 'videos' %}">Videos</a></li>
+                {% endif %}
+                {% if menu_filters_instance.sp_http_oracle_filter %}
+                  <li><a class="nav-link link-dark rounded {% if request.path == '/documentation/sps/Oracle/' %}active{% endif %}" href="{% url 'sp_http' type='Oracle' %}">SP HTTP Oracle</a></li>
+                {% endif %}
+                {% if menu_filters_instance.sp_http_sql_filter %}
+                  <li><a class="nav-link link-dark rounded {% if request.path == '/documentation/sps/SQL%20server/' %}active{% endif %}" href="{% url 'sp_http' type='SQL server' %}">SP HTTP SQL server</a></li>
+                {% endif %}
+                <!--            <li><a class="nav-link link-dark rounded {% if request.path == '/documentation/videos/' %}active{% endif %}" href="{% url "videos" %}">Videos</a></li>-->
+                <li class="mb-1">
+                  <button class="btn btn-toggle align-items-center rounded collapsed" data-bs-toggle="collapse" data-bs-target="#integration-collapse" aria-expanded="false">
+                    Integración
+                  </button>
+                  <div class="collapse" id="integration-collapse">
+                    <ul class="btn-toggle-nav list-unstyled fw-normal pb-1">
+                      <li><a class="nav-link link-dark rounded {% if request.path == '/documentation/postman/' %}active{% endif %}" href="{% url 'postman' %}">Postman</a></li>
+<!--                      <li><a class="nav-link link-dark rounded {% if request.path == '/documentation/plugin/' %}active{% endif %}" href="#">Plugin</a></li>-->
+                    </ul>
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </li>
+          {% if user.is_staff %}
+          <li class="mb-1">
+            <button class="btn btn-toggle align-items-center rounded collapsed" data-bs-toggle="collapse" data-bs-target="#admin-collapse" aria-expanded="false">
+            Administración
+            </button>
+            <div class="collapse" id="admin-collapse">
+              <ul class="btn-toggle-nav list-unstyled fw-normal pb-1">
+                <li><a href="{% url 'admin:index' %}" class="nav-link link-dark rounded">Django admin</a></li>
+              </ul>
+            </div>
+          </li>
+          {% endif %}
+          <li class="mb-1">
+            <button class="btn btn-toggle align-items-center rounded collapsed" data-bs-toggle="collapse" data-bs-target="#account-collapse" aria-expanded="false">
+            Cuenta
+            </button>
+            <div class="collapse" id="account-collapse">
+              <ul class="btn-toggle-nav list-unstyled fw-normal pb-1">
+                <li><a href="#" class="link-dark rounded">Cambiar contraseña</a></li>
+                <li><a class="nav-link link-dark rounded" href="{% url 'logout' %}">Cerrar sesión</a></li>
+              </ul>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </nav>
+    <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+      {% block main %}{% endblock %}
+    </main>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/feather-icons/4.28.0/feather.min.js" integrity="sha512-7x3zila4t2qNycrtZ31HO0NnJr8kg2VI67YLoRSyi9hGhRN66FHYWr7Axa9Y1J9tGYHVBPqIjSE1ogHrJTz51g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  </div>
+</div>
+{% endblock %}

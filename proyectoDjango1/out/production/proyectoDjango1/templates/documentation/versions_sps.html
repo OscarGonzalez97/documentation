@@ -1,0 +1,63 @@
+{% extends "common/base-secured.html" %}
+{% load django_bootstrap5 %}
+{% block main %}
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+    <h1 class="h2">SP HTTP {{ type }}</h1>
+</div>
+<div class="container my-3">
+  <div class="p-4 mx-auto border border-2 rounded-4 shadow mb-3">
+    <div class="table-responsive">
+      <table id="myTable" class="table table-responsive">
+        <thead class="text-center">
+          <tr>
+            <th>Versión</th>
+            <th>Fecha</th>
+            <th>Archivo</th>
+            <th>Detalles</th>
+          </tr>
+        </thead>
+        <tbody class=" table-group-divider">
+          {% for version in versions %}
+          <tr>
+            <td>{{ version.version_number }}</td>
+            <td>{{ version.date|date:"d/m/Y" }}</td>
+            <td><a target="_blank" href="{{version.file.url}}">{{ version.file }}</a></td>
+            <td class="text-center">
+              <a href="#card" onclick="verDetalles('{{ version.id }}');" type="button" class="btn btn-outline-primary btn-archivos">
+              Ver
+              </a>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <!-- Card -->
+  <div id="card" name="card" class="card w-100 mx-auto border border-2 rounded-4 shadow d-none">
+
+  </div>
+</div>
+</div>
+</div>
+{% endblock %}
+{% block local_js %}
+<script>
+
+  function verDetalles(version) {
+    $.get("{%  url 'get_doc_sps' %}",
+      {"version_id": version},
+      function(data) {
+        console.log(data)
+        if (data != null) {
+            document.querySelector("#card").classList.remove("d-none")
+            document.querySelector("#card").innerHTML = data
+        }
+      }
+    ).fail(function(xhr, status, error) {
+    console.log(xhr.responseText);
+      // Aquí puedes realizar acciones adicionales en caso de error
+    });
+  }
+</script>
+{% endblock %}

@@ -1,0 +1,26 @@
+  {% load markdownify %}
+  <div class="card-header py-3">
+    <h3 id="version-title">Version {{ version.version_number }} - Fecha: {{ version.date|date:"d/m/Y" }}	</h3>
+  </div>
+  <!-- Readme-->
+  <div class="card-body">
+    <h5 id="category-resumen" class="card-title">README</h5>
+    <div class="card-text">
+      <div id="resumen-content" class="">
+        <p>{{ version.readme|markdownify|linebreaksbr }}</p>
+      </div>
+    </div>
+  </div>
+  <!-- Archivos-->
+  <div class="card-body">
+    <h5 id="category-title" class="card-title">Archivos</h5>
+    <div class="card-text">
+      <div id="archivos-content">
+        <ol class="list-group list-group-numbered list-group-flush">
+          <li class="list-group-item">
+            <a target="_blank" href="{{ version.file.url }}">{{ version.file }}</a>
+          </li>
+        </ol>
+      </div>
+    </div>
+  </div>
