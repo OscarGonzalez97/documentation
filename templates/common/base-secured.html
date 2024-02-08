@@ -151,7 +151,7 @@
             </button>
             <div class="collapse" id="account-collapse">
               <ul class="btn-toggle-nav list-unstyled fw-normal pb-1">
-                <li><a href="#" class="link-dark rounded">Cambiar contraseña</a></li>
+                <li><a href="{% url "password" %}" class="link-dark rounded {% if request.path == '/auth/password/' %}active{% endif %}">Cambiar contraseña</a></li>
                 <li><a class="nav-link link-dark rounded" href="{% url 'logout' %}">Cerrar sesión</a></li>
               </ul>
             </div>

@@ -1,9 +1,11 @@
-from django.contrib.auth import logout, login, authenticate
+from django.contrib.auth import logout, login, authenticate, update_session_auth_hash
 from django.http import HttpResponseRedirect
 from django.shortcuts import render, redirect
+from django.contrib import messages
+from django.urls import reverse
+from django.contrib.auth.forms import PasswordChangeForm
 
 # Create your views here.
-from django.urls import reverse
 
 
 def login_view(request):
@@ -45,6 +47,18 @@ def login_view(request):
 
     return response
 
+def password(request):
+    if request.method == 'POST':
+        form = PasswordChangeForm(request.user, request.POST)
+        if form.is_valid():
+            user = form.save()
+            update_session_auth_hash(request, user)
+            return render(request, "auth/password.html", { "form":form, "message":"You password was successfully updated!" })
+        else:
+            return render(request, "auth/password.html", { "form":form, "error":"Please correct the error below." })
+    else:
+        form = PasswordChangeForm(request.user)
+    return render(request, "auth/password.html", { "form":form })
 
 def logout_view(request):
     logout(request)

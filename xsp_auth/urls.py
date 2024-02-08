@@ -1,6 +1,7 @@
 from django.urls import path, reverse_lazy
 from django.views.generic import RedirectView
 
+
 from . import views
 
 urlpatterns = [
@@ -8,4 +9,6 @@ urlpatterns = [
     path('login/', views.login_view, name="login"),
     # /auth/logout
     path('logout/', views.logout_view, name="logout"),
+    # /auth/password
+    path('password/', views.password, name="password"),
 ]
