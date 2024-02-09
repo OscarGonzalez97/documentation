@@ -4,6 +4,7 @@ from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.urls import reverse
 from django.contrib.auth.forms import PasswordChangeForm
+from django.contrib.auth.decorators import login_required
 
 # Create your views here.
 
@@ -47,6 +48,7 @@ def login_view(request):
 
     return response
 
+@login_required(login_url='/auth/login')
 def password(request):
     if request.method == 'POST':
         form = PasswordChangeForm(request.user, request.POST)
